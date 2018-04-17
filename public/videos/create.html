@@ -4,15 +4,22 @@
     <title>VidBits</title>
     <link rel="icon" type="image/ico" href="img/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,500" rel="stylesheet">
-    <link rel='stylesheet' href='stylesheets/style.css'>
+    <link rel='stylesheet' href='/stylesheets/style.css'>
   </head>
   <body>
     <div class="title-container">
       <div class="title-logo">
-        <img src="img/logo.svg" alt="">
+        <img src="/img/logo.svg" alt="">
       </div>
     </div>
     <h1>Save a video</h1>
+    <form action="/videos" method="post">
+      <label for="title">Title</label>
+      <input type="test" name="title" id="title-input" value="" />
+      <label for="description">Description</label>
+      <textarea name="description" id="description-input" rows="8" cols="40"></textarea>
+      <button type="submit" id="submit-video-btn" class="input-button">Submit</button>
+    </form>
 
   </body>
 </html>
