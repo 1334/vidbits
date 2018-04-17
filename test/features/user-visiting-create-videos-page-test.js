@@ -18,8 +18,8 @@ describe('visiting create videos page', () => {
       browser.setValue('#description-input', description);
       browser.click('#submit-video-btn');
 
-      assert.include(browser.getText('#videos-container'), title);
-      assert.include(browser.getText('#videos-container'), description);
+      assert.include(browser.getText('body'), title);
+      assert.include(browser.getText('body'), description);
     });
   });
 });
