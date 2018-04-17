@@ -1,17 +1,11 @@
 const {assert} = require('chai');
-const {mongoose, databaseUrl, options} = require('../../database');
+const {connectDatabaseAndDropData, disconnectDatabase} = require('../database-utilities');
 const Video = require('../../models/video');
 
-async function connectDatabase() {
-  await mongoose.connect(databaseUrl, options);
-  await mongoose.connection.db.dropDatabase();
-}
-
-async function disconnectDatabase() {
-  await mongoose.disconnect();
-}
-
 describe('Video model', () => {
+  beforeEach(connectDatabaseAndDropData);
+  afterEach(disconnectDatabase);
+
   describe('#title', () => {
     it('is a string', () => {
       const titleAsNonString = 1;
@@ -30,8 +24,3 @@ describe('Video model', () => {
     });
   });
 });
-
-module.exports = {
-  connectDatabase,
-  disconnectDatabase,
-}
