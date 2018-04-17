@@ -12,7 +12,7 @@ describe('visiting create videos page', () => {
     it('creates a new video entry', () => {
       const title = 'Some title';
       const description = 'Some description';
-      browser.url('/videos/create.html');
+      browser.url('/videos/create');
 
       browser.setValue('#title-input', title);
       browser.setValue('#description-input', description);
