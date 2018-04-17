@@ -5,7 +5,7 @@ router.post('/videos', async (req, res) => {
   const {title, description} = req.body;
   const video = await Video.create({ title, description });
 
-  res.status(201).send(video);
+  res.status(201).render('videos/show', { video });
 });
 
 module.exports = router;
