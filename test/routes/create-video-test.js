@@ -5,7 +5,8 @@ const {connectDatabaseAndDropData, disconnectDatabase} = require('../database-ut
 const app = require('../../app');
 const Video = require('../../models/video');
 
-describe('POST', () => {
+describe('/videos POST', () => {
+
   beforeEach(connectDatabaseAndDropData);
   afterEach(disconnectDatabase);
 
