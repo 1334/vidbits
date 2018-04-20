@@ -21,7 +21,6 @@ describe('visiting /', () => {
       browser.url('/');
 
       assert.include(browser.getText('#videos-container'), title);
-      assert.include(browser.getText('#videos-container'), description);
     });
   });
 });

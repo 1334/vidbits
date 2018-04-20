@@ -1,9 +1,13 @@
 const router = require('express').Router();
 const Video = require('../models/video');
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
+  res.redirect(301, '/videos')
+})
+
+router.get('/videos', async (req, res) => {
   const videos = await Video.find({});
-  res.render('index', { videos });
+  res.render('videos/index', { videos });
 });
 
 router.get('/videos/create', (req, res) => {

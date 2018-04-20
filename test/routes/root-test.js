@@ -6,14 +6,9 @@ const app = require('../../app');
 const Video = require('../../models/video');
 
 describe('/ GET', () => {
-
-  beforeEach(connectDatabaseAndDropData);
-  afterEach(disconnectDatabase);
-
-  it('can render existing videos', async () => {
-    const video = await Video.create({ title: 'existing title', description: 'existing video description' });
+  it('redirects to /videos', async () => {
     const response = await request(app).get('/');
 
-    assert.include(response.text, video.title);
+    assert.equal(response.status, 301);
   });
 });
