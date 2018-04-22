@@ -1,7 +1,7 @@
 const {assert} = require('chai');
 const request = require('supertest');
 const {connectDatabaseAndDropData, disconnectDatabase} = require('../database-utilities');
-const {parseTextFromHTML} = require('../test-utils.js');
+const {parseTextFromHTML, buildVideoObject} = require('../test-utils.js');
 const app = require('../../app');
 const Video = require('../../models/video');
 
@@ -12,7 +12,7 @@ describe('/videos', () => {
 
   describe('GET', () => {
     it('can render existing videos', async () => {
-      const video = await Video.create({ title: 'existing title', description: 'existing video description' });
+      const video = await Video.create(buildVideoObject());
       const response = await request(app).get('/videos');
 
       assert.include(response.text, video.title);
@@ -35,14 +35,13 @@ describe('/videos', () => {
     });
 
     it('redirects to the show page', async () => {
-      const title = 'Title to save';
-      const description = 'Description to save';
+      const videoAttrs = buildVideoObject();
 
       const response = await request(app)
         .post('/videos')
         .type('form')
-        .send({title, description});
-      const createdItem = await Video.findOne({});
+        .send(videoAttrs);
+      const createdItem = await Video.findOne(videoAttrs);
 
       assert.equal(response.status, 302);
       assert.equal(response.headers.location, `/videos/${createdItem._id}`);
@@ -50,55 +49,61 @@ describe('/videos', () => {
 
     describe('whith a missing title', () => {
       it('doesn\'t save the video', async () => {
-        const title = '';
+        const videoAttrs = buildVideoObject();
+        videoAttrs.title = '';
+
         const response = await request(app)
           .post('/videos')
           .type('form')
-          .send({title});
+          .send(videoAttrs);
         const videos = await Video.find({});
 
         assert.equal(videos.length, 0);
       });
 
       it('responds with a 400 status code', async () => {
-        const title = '';
+        const videoAttrs = buildVideoObject();
+        videoAttrs.title = '';
         const response = await request(app)
           .post('/videos')
           .type('form')
-          .send({title});
+          .send(videoAttrs);
 
         assert.equal(response.status, 400);
       });
 
       it('renders the video/create form', async () => {
-        const title = '';
+        const videoAttrs = buildVideoObject();
+        videoAttrs.title = '';
         const response = await request(app)
           .post('/videos')
           .type('form')
-          .send({title});
+          .send(videoAttrs);
 
         assert.exists(parseTextFromHTML(response.text, '#title-input'));
       });
 
       it('renders validation errors', async () => {
-        const title = '';
+        const videoAttrs = buildVideoObject();
+        videoAttrs.title = '';
         const response = await request(app)
           .post('/videos')
           .type('form')
-          .send({title});
+          .send(videoAttrs);
 
         assert.include(parseTextFromHTML(response.text, 'form'), 'required');
       });
 
       it('preserves other values', async () => {
-        const title = '';
-        const description = 'video with errors description';
+        const videoAttrs = buildVideoObject();
+        videoAttrs.title = '';
+
         const response = await request(app)
           .post('/videos')
           .type('form')
-          .send({title, description});
+          .send(videoAttrs);
 
-        assert.include(parseTextFromHTML(response.text, 'form'), description);
+        assert.include(parseTextFromHTML(response.text, 'form'), videoAttrs.description);
       });
     });
   });
