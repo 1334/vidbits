@@ -20,15 +20,6 @@ describe('/videos', () => {
   });
 
   describe('POST', () => {
-    it('can create a video', async () => {
-      const response = await request(app)
-        .post('/videos')
-        .type('form')
-        .send({ title: 'some title' });
-
-      assert.equal(response.status, 201);
-    });
-
     it('saves video to the database', async () => {
       const title = 'Title to save';
       const description = 'Description to save';
@@ -41,6 +32,20 @@ describe('/videos', () => {
 
       assert.equal(createdItem.title, title);
       assert.equal(createdItem.description, description);
+    });
+
+    it('redirects to the show page', async () => {
+      const title = 'Title to save';
+      const description = 'Description to save';
+
+      const response = await request(app)
+        .post('/videos')
+        .type('form')
+        .send({title, description});
+      const createdItem = await Video.findOne({});
+
+      assert.equal(response.status, 302);
+      assert.equal(response.headers.location, `/videos/${createdItem._id}`);
     });
 
     describe('whith a missing title', () => {

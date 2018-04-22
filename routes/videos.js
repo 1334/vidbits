@@ -19,7 +19,7 @@ router.post('/videos', async (req, res) => {
     res.status(400).render('videos/create', { video, titleError: video.errors.title });
   } else {
     await video.save();
-    res.status(201).render('videos/show', { video });
+    res.redirect(`/videos/${video._id}`);
   }
 });
 
