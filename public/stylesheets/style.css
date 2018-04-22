@@ -6,7 +6,7 @@ body {
 }
 
 .add-video-button {
-  text-align: center; 
+  text-align: center;
   background-color: #ff9b34;
   border: none;
   color: white;
@@ -95,10 +95,17 @@ form textarea {
   padding: 5px;
 }
 
+span.error {
+  display: block;
+  font-style: italic;
+  font-size: 0.8em;
+  color: red;
+}
+
 /* Show page */
 
 .input-button {
-  text-align: center; 
+  text-align: center;
   background-color: #ff9b34;
   border: none;
   color: white;

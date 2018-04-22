@@ -16,7 +16,7 @@ router.post('/videos', async (req, res) => {
   video.validateSync();
 
   if (video.errors) {
-    res.status(400).render('videos/create', { video, titleError: video.errors.title });
+    res.status(400).render('videos/create', { video, errors: video.errors });
   } else {
     await video.save();
     res.redirect(`/videos/${video._id}`);

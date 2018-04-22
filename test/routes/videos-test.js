@@ -91,7 +91,7 @@ describe('/videos', () => {
           .type('form')
           .send(videoAttrs);
 
-        assert.include(parseTextFromHTML(response.text, 'form'), 'required');
+        assert.include(parseTextFromHTML(response.text, 'label[for=title] > span'), 'required');
       });
 
       it('preserves other values', async () => {
@@ -104,6 +104,66 @@ describe('/videos', () => {
           .send(videoAttrs);
 
         assert.include(parseTextFromHTML(response.text, 'form'), videoAttrs.description);
+      });
+    });
+
+    describe('whith a missing url', () => {
+      it('doesn\'t save the video', async () => {
+        const videoAttrs = buildVideoObject();
+        videoAttrs.url = '';
+
+        const response = await request(app)
+          .post('/videos')
+          .type('form')
+          .send(videoAttrs);
+        const videos = await Video.find({});
+
+        assert.equal(videos.length, 0);
+      });
+
+      it('responds with a 400 status code', async () => {
+        const videoAttrs = buildVideoObject();
+        videoAttrs.url = '';
+        const response = await request(app)
+          .post('/videos')
+          .type('form')
+          .send(videoAttrs);
+
+        assert.equal(response.status, 400);
+      });
+
+      it('renders the video/create form', async () => {
+        const videoAttrs = buildVideoObject();
+        videoAttrs.url = '';
+        const response = await request(app)
+          .post('/videos')
+          .type('form')
+          .send(videoAttrs);
+
+        assert.exists(parseTextFromHTML(response.text, '#url-input'));
+      });
+
+      it('renders validation errors', async () => {
+        const videoAttrs = buildVideoObject();
+        videoAttrs.url = '';
+        const response = await request(app)
+          .post('/videos')
+          .type('form')
+          .send(videoAttrs);
+
+        assert.include(parseTextFromHTML(response.text, 'label[for=url] > span'), 'required');
+      });
+
+      it('preserves other values', async () => {
+        const videoAttrs = buildVideoObject();
+        videoAttrs.url = '';
+
+        const response = await request(app)
+          .post('/videos')
+          .type('form')
+          .send(videoAttrs);
+
+        assert.include(response.text, videoAttrs.title);
       });
     });
   });
