@@ -1,4 +1,5 @@
 const {assert} = require('chai');
+const {buildVideoObject} = require('../test-utils');
 
 describe('visiting /', () => {
   describe('when there are no videos', () => {
@@ -11,30 +12,21 @@ describe('visiting /', () => {
 
   describe('when there are some videos created', () => {
     it('it display the information of the created videos', () => {
-      const { title, description, url } = createVideo();
+      const video = buildVideoObject();
 
-      assert.include(browser.getText('#videos-container'), title);
-      assert.include(browser.getAttribute('iframe.video-player', 'src'), url);
+      browser.url('/videos/create');
+      browser.setValue('#url-input', video.url);
+      browser.setValue('#title-input', video.title);
+      browser.setValue('#description-input', video.description);
+      browser.click('#submit-video-btn');
+
+      browser.click('.title-logo a');
+
+      assert.include(browser.getText('#videos-container'), video.title);
+      assert.include(browser.getAttribute('iframe.video-player', 'src'), video.url);
       assert.include(browser.getAttribute('.video-title a', 'href'), '/videos/');
     });
   });
 });
 
-const createVideo = (options = {}) => {
-  const title = options.title || 'Some existing title';
-  const description = options.description || 'Some existing description';
-  const url = options.url || generateRandomUrl('example.com');
 
-  browser.url('/videos/create');
-  browser.setValue('#url-input', url);
-  browser.setValue('#title-input', title);
-  browser.setValue('#description-input', description);
-  browser.click('#submit-video-btn');
-  browser.click('.title-logo a');
-
-  return { title, description, url };
-};
-
-const generateRandomUrl = (domain) => {
-  return `http://${domain}/${Math.random()}`;
-};
