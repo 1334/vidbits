@@ -1,8 +1,11 @@
 <h1>Save a video</h1>
 <form action="/videos" method="post">
   <label for="title">Title</label>
-  <input type="test" name="title" id="title-input" value="" />
+  <input type="test" name="title" id="title-input" value="{{ video.title }}" />
+  {{#if titleError}}
+    <span>{{ titleError.message }}</span>
+  {{/if}}
   <label for="description">Description</label>
-  <textarea name="description" id="description-input" rows="8" cols="40"></textarea>
+  <textarea name="description" id="description-input" rows="8" cols="40">{{ video.description }}</textarea>
   <button type="submit" id="submit-video-btn" class="input-button">Submit</button>
 </form>

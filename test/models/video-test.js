@@ -13,6 +13,13 @@ describe('Video model', () => {
 
       assert.strictEqual(video.title, titleAsNonString.toString());
     });
+
+    it('is required', () => {
+      const video = new Video({});
+      video.validateSync();
+
+      assert.equal(video.errors.title.message, 'Path `title` is required.');
+    });
   });
 
   describe('#description', () => {
