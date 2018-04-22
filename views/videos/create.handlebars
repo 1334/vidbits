@@ -1,5 +1,7 @@
 <h1>Save a video</h1>
 <form action="/videos" method="post">
+  <label for="title">URL</label>
+  <input type="test" name="url" id="url-input" value="" />
   <label for="title">Title</label>
   <input type="test" name="title" id="title-input" value="{{ video.title }}" />
   {{#if titleError}}
