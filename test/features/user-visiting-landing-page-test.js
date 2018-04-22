@@ -13,7 +13,7 @@ describe('visiting /', () => {
     it('it display the information of the created videos', () => {
       const title = 'Some existing title';
       const description = 'Some existing description';
-      const videoUrl = 'https>//example.com/video';
+      const videoUrl = generateRandomUrl('example.com');
 
       browser.url('/videos/create');
       browser.setValue('#url-input', videoUrl);
@@ -27,3 +27,7 @@ describe('visiting /', () => {
     });
   });
 });
+
+const generateRandomUrl = (domain) => {
+  return `http://${domain}/${Math.random()}`;
+};

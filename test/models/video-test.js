@@ -30,4 +30,11 @@ describe('Video model', () => {
       assert.strictEqual(video.description, descriptionAsNonString.toString());
     });
   });
+
+  describe('#url', () => {
+      const urlAsNonString = 7;
+      const video = new Video({url: urlAsNonString});
+
+      assert.strictEqual(video.url, urlAsNonString.toString());
+  });
 });

@@ -23,15 +23,15 @@ describe('/videos', () => {
     it('saves video to the database', async () => {
       const title = 'Title to save';
       const description = 'Description to save';
+      const url = 'https://example.com/video';
 
       const response = await request(app)
         .post('/videos')
         .type('form')
-        .send({title, description});
+        .send({title, description, url});
       const createdItem = await Video.findOne({});
 
-      assert.equal(createdItem.title, title);
-      assert.equal(createdItem.description, description);
+      assert.include(createdItem, { title, description, url });
     });
 
     it('redirects to the show page', async () => {
