@@ -10,10 +10,6 @@ router.get('/videos', async (req, res) => {
   res.render('videos/index', { videos });
 });
 
-router.get('/videos/create', (req, res) => {
-  res.render('videos/create');
-});
-
 router.post('/videos', async (req, res) => {
   const {title, description} = req.body;
   const video = new Video({ title, description });
@@ -25,6 +21,16 @@ router.post('/videos', async (req, res) => {
     await video.save();
     res.status(201).render('videos/show', { video });
   }
+});
+
+router.get('/videos/create', (req, res) => {
+  res.render('videos/create');
+});
+
+router.get('/videos/:id', async (req, res) => {
+  const video = await Video.findById(req.params.id);
+
+  res.render('videos/show', { video });
 });
 
 module.exports = router;
