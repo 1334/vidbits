@@ -38,16 +38,56 @@ describe('/videos/:id/update', () => {
   beforeEach(connectDatabaseAndDropData);
   afterEach(disconnectDatabase);
 
-  it('updates an existing video', async () => {
-    const oldTitle = 'Same old title';
-    const newTitle = 'Some shiny new title';
-    const video = await Video.create(buildVideoObject({ title: oldTitle }));
+  describe('when the parameters are correct', () => {
+    it('updates an existing video', async () => {
+      const oldTitle = 'Same old title';
+      const newTitle = 'Some shiny new title';
+      const video = await Video.create(buildVideoObject({ title: oldTitle }));
 
-    const response = await request(app)
-      .post(`/videos/${video._id}/update`)
-      .type('form')
-      .send({ title: newTitle });
+      const response = await request(app)
+        .post(`/videos/${video._id}/update`)
+        .type('form')
+        .send({ title: newTitle });
 
-    assert.equal((await Video.findById(video._id)).title, newTitle);
+      assert.equal((await Video.findById(video._id)).title, newTitle);
+    });
+
+    it('redirects back to the show page', async () => {
+      const video = await Video.create(buildVideoObject());
+
+      const response = await request(app)
+        .post(`/videos/${video._id}/update`)
+        .type('form')
+        .send({ title: 'Some other title' });
+
+      assert.equal(response.status, 302);
+    });
   });
+
+  describe('when the parameters are incorrect', () => {
+    it('responds with a 400 status code', async () => {
+      const video = await Video.create(buildVideoObject());
+
+      const response = await request(app)
+        .post(`/videos/${video._id}/update`)
+        .type('form')
+        .send({ title: '' });
+
+      assert.equal(response.status, 400);
+    });
+
+    it('renders back the form', async () => {
+      const video = await Video.create(buildVideoObject());
+
+      const response = await request(app)
+        .post(`/videos/${video._id}/update`)
+        .type('form')
+        .send({ url: '' });
+
+      assert.include(response.text, 'update-form');
+    });
+  });
+
+
+
 });

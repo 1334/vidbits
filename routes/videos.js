@@ -40,13 +40,16 @@ router.get('/videos/:id/edit', async (req, res) => {
 });
 
 router.post('/videos/:id/update', async (req, res) => {
-  const {title, description, url} = req.body;
+  const video = await Video.findByIdAndUpdate(req.params.id, req.body, {new: true});
 
-  const video = await Video.findByIdAndUpdate(req.params.id, { title, description, url });
-  // video.validateSync();
+  video.validateSync();
 
-  await video.save();
-  res.redirect('/');
+  if (video.errors) {
+    res.status(400).render('videos/edit', {video});
+  } else {
+    await video.save();
+    res.redirect(`/videos/${video._id}`);
+  }
 });
 
 module.exports = router;
