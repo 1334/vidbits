@@ -87,7 +87,21 @@ describe('/videos/:id/update', () => {
       assert.include(response.text, 'update-form');
     });
   });
+});
 
+describe('/video/:id/delete', () => {
+  beforeEach(connectDatabaseAndDropData);
+  afterEach(disconnectDatabase);
 
+  it('deletes a video', async () => {
+    const video = await Video.create(buildVideoObject());
 
+    const response = await request(app)
+      .post(`/videos/${video._id}/delete`)
+      .type('form')
+      .send();
+
+    console.log(await Video.findById(video._id));
+    assert.isNotOk(await Video.findById(video._id));
+  });
 });

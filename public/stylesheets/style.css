@@ -122,6 +122,10 @@ span.error {
   display: block;
 }
 
+.input-button + .input-button {
+  margin-top: 1.3em;
+}
+
 .video-description {
   padding: 30px 10px;
 }
