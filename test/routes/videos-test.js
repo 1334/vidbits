@@ -21,17 +21,15 @@ describe('/videos', () => {
 
   describe('POST', () => {
     it('saves video to the database', async () => {
-      const title = 'Title to save';
-      const description = 'Description to save';
-      const url = 'https://example.com/video';
+      const videoAttrs = buildVideoObject();
 
       const response = await request(app)
         .post('/videos')
         .type('form')
-        .send({title, description, url});
+        .send(videoAttrs);
       const createdItem = await Video.findOne({});
 
-      assert.include(createdItem, { title, description, url });
+      assert.include(createdItem, videoAttrs);
     });
 
     it('redirects to the show page', async () => {
@@ -47,7 +45,7 @@ describe('/videos', () => {
       assert.equal(response.headers.location, `/videos/${createdItem._id}`);
     });
 
-    describe('whith a missing title', () => {
+    describe('with a missing title', () => {
       it('doesn\'t save the video', async () => {
         const videoAttrs = buildVideoObject();
         videoAttrs.title = '';
@@ -107,7 +105,7 @@ describe('/videos', () => {
       });
     });
 
-    describe('whith a missing url', () => {
+    describe('with a missing url', () => {
       it('doesn\'t save the video', async () => {
         const videoAttrs = buildVideoObject();
         videoAttrs.url = '';

@@ -2,7 +2,7 @@ const {assert} = require('chai');
 const request = require('supertest');
 const {connectDatabaseAndDropData, disconnectDatabase} = require('../database-utilities');
 const {jsdom} = require('jsdom');
-const {buildVideoObject} = require('../test-utils.js');
+const {parseTextFromHTML, buildVideoObject} = require('../test-utils.js');
 const app = require('../../app');
 const Video = require('../../models/video');
 
@@ -28,6 +28,7 @@ describe('/videos/:id/edit', () => {
     const video = await Video.create(buildVideoObject());
     const response = await request(app).get(`/videos/${video._id}/edit`)
 
+    assert.isOk(parseTextFromHTML(response.text, 'form'));
     assert.include(response.text, video.title);
     assert.include(response.text, video.description);
     assert.include(response.text, video.url);
@@ -101,7 +102,6 @@ describe('/video/:id/delete', () => {
       .type('form')
       .send();
 
-    console.log(await Video.findById(video._id));
     assert.isNotOk(await Video.findById(video._id));
   });
 });
