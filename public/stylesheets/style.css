@@ -109,7 +109,7 @@ span.error {
   padding-top: 1em;
 }
 
-.input-button {
+.button {
   text-align: center;
   background-color: #ff9b34;
   border: none;
@@ -122,7 +122,7 @@ span.error {
   display: block;
 }
 
-.input-button + .input-button {
+.button + .button {
   margin-top: 1.3em;
 }
 
